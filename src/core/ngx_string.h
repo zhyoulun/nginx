@@ -87,7 +87,10 @@ ngx_strlchr(u_char *p, u_char *last, u_char c)
  */
 #define ngx_memzero(buf, n)       (void) memset(buf, 0, n)
 #define ngx_memset(buf, c, n)     (void) memset(buf, c, n)
-
+/*
+void *memset( void *dest, int ch, size_t count );
+Copies the value ch (after conversion to unsigned char as if by (unsigned char)ch) into each of the first count characters of the object pointed to by dest.
+*/
 
 #if (NGX_MEMCPY_LIMIT)
 
