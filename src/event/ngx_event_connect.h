@@ -33,6 +33,7 @@ typedef void (*ngx_event_save_peer_session_pt)(ngx_peer_connection_t *pc,
     void *data);
 
 
+//Nginx定义了基本的数据结构ngx_connection_t来表示连接。由客户端主动发起、Nginx服务器被动接收的TCP连接，这类可以称为被动连接。还有一类连接，在某些请求的处理过程中，Nginx会试图主动向其他上游服务器建立连接，并以此连接与上游服务器通信，Nginx定义ngx_peer_connection_t结构来表示，这类可以称为主动连接。本质上来说，主动连接是以ngx_connection_t结构体为基础实现的。
 struct ngx_peer_connection_s {
     ngx_connection_t                *connection;
 

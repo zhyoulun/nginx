@@ -14,7 +14,7 @@
 
 
 typedef struct {
-    size_t      len;
+    size_t      len;//数据长度
     u_char     *data;
 } ngx_str_t;
 
@@ -36,7 +36,7 @@ typedef struct {
     u_char     *data;
 } ngx_variable_value_t;
 
-
+//初始化一个ngx_str_t结构
 #define ngx_string(str)     { sizeof(str) - 1, (u_char *) str }
 #define ngx_null_string     { 0, NULL }
 #define ngx_str_set(str, text)                                               \
@@ -47,23 +47,29 @@ typedef struct {
 #define ngx_tolower(c)      (u_char) ((c >= 'A' && c <= 'Z') ? (c | 0x20) : c)
 #define ngx_toupper(c)      (u_char) ((c >= 'a' && c <= 'z') ? (c & ~0x20) : c)
 
+//将src的前n个字符转成小写，存储到dst中
 void ngx_strlow(u_char *dst, u_char *src, size_t n);
 
-
+//比较前n个字符的大小
 #define ngx_strncmp(s1, s2, n)  strncmp((const char *) s1, (const char *) s2, n)
 
-
+//比较字符
 /* msvc and icc7 compile strcmp() to inline loop */
 #define ngx_strcmp(s1, s2)  strcmp((const char *) s1, (const char *) s2)
 
 
+//在s1中找到s2第一次出现的位置，如果找不到返回null
 #define ngx_strstr(s1, s2)  strstr((const char *) s1, (const char *) s2)
+//查看字符串长度
 #define ngx_strlen(s)       strlen((const char *) s)
 
+//查看字符串p前n个字符的长度，如果遇到'\0'，则返回长度
 size_t ngx_strnlen(u_char *p, size_t n);
 
+//Returns a pointer to the first occurrence of character in the C string str.
 #define ngx_strchr(s1, c)   strchr((const char *) s1, (int) c)
 
+//从p找到last，第一次遇到c，则返回位置
 static ngx_inline u_char *
 ngx_strlchr(u_char *p, u_char *last, u_char c)
 {
@@ -80,6 +86,7 @@ ngx_strlchr(u_char *p, u_char *last, u_char c)
 }
 
 
+//memset, Sets the first num bytes of the block of memory pointed by ptr to the specified value (interpreted as an unsigned char).
 /*
  * msvc and icc7 compile memset() to the inline "rep stos"
  * while ZeroMemory() and bzero() are the calls.
@@ -99,6 +106,8 @@ void *ngx_memcpy(void *dst, const void *src, size_t n);
 
 #else
 
+//memcpy: Copies the values of num bytes from the location pointed to by source directly to the memory block pointed to by destination.
+//destination is returned.
 /*
  * gcc3, msvc, and icc7 compile memcpy() to the inline "rep movs".
  * gcc3 compiles memcpy(d, s, 4) to the inline "mov"es.
@@ -141,15 +150,32 @@ ngx_copy(u_char *dst, u_char *src, size_t len)
 #endif
 
 
+//memmove:
+//Copies the values of num bytes from the location pointed by source to the memory block pointed by destination. Copying takes place as if an intermediate buffer were used, allowing the destination and source to overlap.
+//destination is returned.
+/*
+int main ()
+{
+  char str[] = "memmove can be very useful......";//memmove can be very very useful.
+  memmove (str+20,str+15,11);
+  puts (str);
+  return 0;
+}
+*/
 #define ngx_memmove(dst, src, n)   (void) memmove(dst, src, n)
 #define ngx_movemem(dst, src, n)   (((u_char *) memmove(dst, src, n)) + (n))
 
-
+/*
+Compares the first num bytes of the block of memory pointed by ptr1 to the first num bytes pointed by ptr2, returning zero if they all match or a value different from zero representing which is greater if they do not.
+Notice that, unlike strcmp, the function does not stop comparing after finding a null character.
+*/
 /* msvc and icc7 compile memcmp() to the inline loop */
 #define ngx_memcmp(s1, s2, n)  memcmp((const char *) s1, (const char *) s2, n)
 
 
+//字符串拷贝
 u_char *ngx_cpystrn(u_char *dst, u_char *src, size_t n);
+//字符串复制
 u_char *ngx_pstrdup(ngx_pool_t *pool, ngx_str_t *src);
 u_char * ngx_cdecl ngx_sprintf(u_char *buf, const char *fmt, ...);
 u_char * ngx_cdecl ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...);
@@ -159,7 +185,9 @@ u_char *ngx_vslprintf(u_char *buf, u_char *last, const char *fmt, va_list args);
 #define ngx_vsnprintf(buf, max, fmt, args)                                   \
     ngx_vslprintf(buf, buf + (max), fmt, args)
 
+//忽略大小写比较字符串
 ngx_int_t ngx_strcasecmp(u_char *s1, u_char *s2);
+//忽略大小写比较前n个字符串
 ngx_int_t ngx_strncasecmp(u_char *s1, u_char *s2, size_t n);
 
 u_char *ngx_strnstr(u_char *s1, char *s2, size_t n);

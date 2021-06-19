@@ -39,6 +39,7 @@ ngx_atomic_cmp_set(ngx_atomic_t *lock, ngx_atomic_uint_t old,
 {
     u_char  res;
 
+    //内联汇编
     __asm__ volatile (
 
          NGX_SMP_LOCK

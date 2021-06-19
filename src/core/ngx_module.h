@@ -220,10 +220,10 @@
 
 
 struct ngx_module_s {
-    ngx_uint_t            ctx_index;
-    ngx_uint_t            index;
+    ngx_uint_t            ctx_index;//ctx_index是指，在ngx_modules数组中，该模块在相同类型的模块中的次序。
+    ngx_uint_t            index;//index变量是指，该模块在ngx_modules数组中的次序，或者说下标。该变量在Nginx执行初始化的时候被初始化，初始化代码位于core\nginx.c的main函数中；初始化的函数是ngx_preinit_modules
 
-    char                 *name;
+    char                 *name;//模块名称，在ngx_preinit_modules函数中进行初始化
 
     ngx_uint_t            spare0;
     ngx_uint_t            spare1;
@@ -233,7 +233,7 @@ struct ngx_module_s {
 
     void                 *ctx;
     ngx_command_t        *commands;
-    ngx_uint_t            type;
+    ngx_uint_t            type;//Nginx共有5中模块类型CORF、CONF、EVNT、HTTP、MAIL
 
     ngx_int_t           (*init_master)(ngx_log_t *log);
 
@@ -264,6 +264,7 @@ typedef struct {
 } ngx_core_module_t;
 
 
+//初始化ngx_module_t中的index值和name值
 ngx_int_t ngx_preinit_modules(void);
 ngx_int_t ngx_cycle_modules(ngx_cycle_t *cycle);
 ngx_int_t ngx_init_modules(ngx_cycle_t *cycle);

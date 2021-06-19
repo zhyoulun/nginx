@@ -19,6 +19,7 @@ ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin)
 
     for ( ;; ) {
 
+        //两阶段锁：第一阶段先自旋，希望可以获得锁；第二阶段调用者会睡眠，直到锁可用
         if (*lock == 0 && ngx_atomic_cmp_set(lock, 0, value)) {
             return;
         }

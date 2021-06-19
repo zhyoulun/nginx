@@ -22,6 +22,7 @@ ngx_uint_t         ngx_max_module;
 static ngx_uint_t  ngx_modules_n;
 
 
+//初始化ngx_module_t中的index值和name值
 ngx_int_t
 ngx_preinit_modules(void)
 {
