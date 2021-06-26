@@ -2,6 +2,7 @@
 # Copyright (C) Igor Sysoev
 # Copyright (C) Nginx, Inc.
 
+# 创建ngx_modules.c文件
 
 if [ $EVENT_SELECT = NO -a $EVENT_FOUND = NO ]; then
     EVENT_SELECT=YES
@@ -1171,7 +1172,7 @@ fi
 #    . $NGX_OBJS/auto
 #fi
 
-
+# 这里是增加自定义module的地方
 if test -n "$NGX_ADDONS"; then
 
     echo configuring additional modules

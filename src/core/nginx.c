@@ -212,6 +212,7 @@ main(int argc, char *const *argv)
     }
 
     if (ngx_show_version) {
+        //nginx -v
         ngx_show_version_info();
 
         if (!ngx_test_config) {

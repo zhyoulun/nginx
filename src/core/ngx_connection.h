@@ -161,23 +161,23 @@ struct ngx_connection_s {
 
     ngx_atomic_uint_t   number;//连接使用次数。ngx_connection_t结构体每次建立一条来自客户端的连接，或者主动向后端服务器发起连接时，number都会加1
 
-    ngx_uint_t          requests;
+    ngx_uint_t          requests;//处理的请求次数
 
-    unsigned            buffered:8;
+    unsigned            buffered:8;//缓存中的业务类型
 
-    unsigned            log_error:3;     /* ngx_connection_log_error_e */
+    unsigned            log_error:3;     /* ngx_connection_log_error_e */ //本连接的日志级别，占用3位，取值范围为0～7，但实际只定义了5个值，由ngx_connection_log_error_e枚举表示。
 
-    unsigned            timedout:1;
-    unsigned            error:1;
-    unsigned            destroyed:1;
+    unsigned            timedout:1;//为1表示连接已经超时
+    unsigned            error:1;//为1表示连接处理过程中出现错误
+    unsigned            destroyed:1;//为1表示连接已经销毁
 
-    unsigned            idle:1;
-    unsigned            reusable:1;
-    unsigned            close:1;
+    unsigned            idle:1;//为1表示连接处于空闲状态，如keepalive两次请求中间的状态
+    unsigned            reusable:1;//为1表示连接可重用，与上面的queue字段对应使用 
+    unsigned            close:1;//为1表示连接关闭 
     unsigned            shared:1;
 
-    unsigned            sendfile:1;
-    unsigned            sndlowat:1;
+    unsigned            sendfile:1;//为1表示正在将文件中的数据发往连接的另一端
+    unsigned            sndlowat:1;//为1表示只有连接套接字对应的发送缓冲区必须满足最低设置的大小阀值时，事件驱动模块才会分发该事件。这与ngx_handle_write_event方法中的lowat参数是对应的
     unsigned            tcp_nodelay:2;   /* ngx_connection_tcp_nodelay_e */
     unsigned            tcp_nopush:2;    /* ngx_connection_tcp_nopush_e */
 

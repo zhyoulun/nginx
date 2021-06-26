@@ -42,6 +42,7 @@ ngx_strerror(ngx_err_t err, u_char *errstr, size_t size)
 }
 
 
+//将所有的系统错误提前存放到ngx_sys_errlist数组中，下标为int
 ngx_int_t
 ngx_strerror_init(void)
 {

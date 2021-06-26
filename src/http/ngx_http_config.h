@@ -21,30 +21,39 @@ typedef struct {
 } ngx_http_conf_ctx_t;
 
 
+//Defines the module context of an HTTP module.
 typedef struct {
-    ngx_int_t   (*preconfiguration)(ngx_conf_t *cf);
-    ngx_int_t   (*postconfiguration)(ngx_conf_t *cf);
+    //解析配置文件前调用
+    ngx_int_t   (*preconfiguration)(ngx_conf_t *cf);//A pre-configuration callback
+    //解析配置文件完成后调用
+    ngx_int_t   (*postconfiguration)(ngx_conf_t *cf);//A post-configuration callback
 
-    void       *(*create_main_conf)(ngx_conf_t *cf);
-    char       *(*init_main_conf)(ngx_conf_t *cf, void *conf);
+    //当需要创建数据结构用于存储main级别的全局配置项时，可以通过该方法创建存储全局配置项的结构体
+    void       *(*create_main_conf)(ngx_conf_t *cf);//A callback for allocations and initilizations of configurations for the main block configuration
+    //常用于初始化创建main级别配置项
+    char       *(*init_main_conf)(ngx_conf_t *cf, void *conf);//A callback to set the configuration based on the directives supplied in the configuration files
 
-    void       *(*create_srv_conf)(ngx_conf_t *cf);
-    char       *(*merge_srv_conf)(ngx_conf_t *cf, void *prev, void *conf);
+    //当需要创建数据结构用于存储srv级别的配置项时，可以通过该方法创建存储srv级别配置项的结构体
+    void       *(*create_srv_conf)(ngx_conf_t *cf);//A callback for allocations and initilizations of configurations for the server block configuration
+    //用于合并main级别和srv级别下的同名配置项
+    char       *(*merge_srv_conf)(ngx_conf_t *cf, void *prev, void *conf);//A callback to merge the server block configuration with the main block
 
-    void       *(*create_loc_conf)(ngx_conf_t *cf);
-    char       *(*merge_loc_conf)(ngx_conf_t *cf, void *prev, void *conf);
+    //当需要创建数据结构用于存储loc级别的配置项时，可以实现该方法
+    void       *(*create_loc_conf)(ngx_conf_t *cf);//A callback for allocations and initilizations of configurations for the location block configuration
+    //用于合并srv级别和loc级别下的同名配置项
+    char       *(*merge_loc_conf)(ngx_conf_t *cf, void *prev, void *conf);//A callback to merge the location block configuration with the server block
 } ngx_http_module_t;
 
 
 #define NGX_HTTP_MODULE           0x50545448   /* "HTTP" */
 
-#define NGX_HTTP_MAIN_CONF        0x02000000
-#define NGX_HTTP_SRV_CONF         0x04000000
-#define NGX_HTTP_LOC_CONF         0x08000000
+#define NGX_HTTP_MAIN_CONF        0x02000000//配置指令只能出现在http级别
+#define NGX_HTTP_SRV_CONF         0x04000000//配置指令只能出现在server级别
+#define NGX_HTTP_LOC_CONF         0x08000000//配置指令只能出现在location级别
 #define NGX_HTTP_UPS_CONF         0x10000000
 #define NGX_HTTP_SIF_CONF         0x20000000
-#define NGX_HTTP_LIF_CONF         0x40000000
-#define NGX_HTTP_LMT_CONF         0x80000000
+#define NGX_HTTP_LIF_CONF         0x40000000//配置指令只能出现在if()块中
+#define NGX_HTTP_LMT_CONF         0x80000000//配置指令只能出现在limit_except块中(limit_except: 限制除了)
 
 
 #define NGX_HTTP_MAIN_CONF_OFFSET  offsetof(ngx_http_conf_ctx_t, main_conf)

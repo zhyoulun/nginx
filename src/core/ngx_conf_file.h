@@ -19,25 +19,25 @@
  *    TT        command type, i.e. HTTP "location" or "server" command
  */
 
-#define NGX_CONF_NOARGS      0x00000001
-#define NGX_CONF_TAKE1       0x00000002
-#define NGX_CONF_TAKE2       0x00000004
-#define NGX_CONF_TAKE3       0x00000008
-#define NGX_CONF_TAKE4       0x00000010
-#define NGX_CONF_TAKE5       0x00000020
-#define NGX_CONF_TAKE6       0x00000040
-#define NGX_CONF_TAKE7       0x00000080
+#define NGX_CONF_NOARGS      0x00000001//配置指令不接受任何参数
+#define NGX_CONF_TAKE1       0x00000002//配置指令接受1个参数
+#define NGX_CONF_TAKE2       0x00000004//配置指令接受2个参数
+#define NGX_CONF_TAKE3       0x00000008//..
+#define NGX_CONF_TAKE4       0x00000010//..
+#define NGX_CONF_TAKE5       0x00000020//..
+#define NGX_CONF_TAKE6       0x00000040//..
+#define NGX_CONF_TAKE7       0x00000080//配置指令接受7个参数
 
-#define NGX_CONF_MAX_ARGS    8
+#define NGX_CONF_MAX_ARGS    8//nginx配置指令最大参数大小，目前该值被定义为8，也就是不能超过8个参数值
 
-#define NGX_CONF_TAKE12      (NGX_CONF_TAKE1|NGX_CONF_TAKE2)
-#define NGX_CONF_TAKE13      (NGX_CONF_TAKE1|NGX_CONF_TAKE3)
+#define NGX_CONF_TAKE12      (NGX_CONF_TAKE1|NGX_CONF_TAKE2)//配置指令接受1个或2个参数
+#define NGX_CONF_TAKE13      (NGX_CONF_TAKE1|NGX_CONF_TAKE3)//配置指令接受1个或3个参数
 
-#define NGX_CONF_TAKE23      (NGX_CONF_TAKE2|NGX_CONF_TAKE3)
+#define NGX_CONF_TAKE23      (NGX_CONF_TAKE2|NGX_CONF_TAKE3)//配置指令接受2个或3个参数
 
-#define NGX_CONF_TAKE123     (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3)
+#define NGX_CONF_TAKE123     (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3)//配置指令接受1个或2个或3个参数
 #define NGX_CONF_TAKE1234    (NGX_CONF_TAKE1|NGX_CONF_TAKE2|NGX_CONF_TAKE3   \
-                              |NGX_CONF_TAKE4)
+                              |NGX_CONF_TAKE4)//配置指令接受1个或2个或3个参数
 
 #define NGX_CONF_ARGS_NUMBER 0x000000ff
 #define NGX_CONF_BLOCK       0x00000100
@@ -75,12 +75,12 @@
 
 
 struct ngx_command_s {
-    ngx_str_t             name;
-    ngx_uint_t            type;
-    char               *(*set)(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-    ngx_uint_t            conf;
-    ngx_uint_t            offset;
-    void                 *post;
+    ngx_str_t             name;//配置项名称，例如gzip
+    ngx_uint_t            type;//配置项类型，指定配置项可以出现的位置。例如：出现在server{}或者location{}中，以及它可以携带的参数个数
+    char               *(*set)(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);//出现了name中指定的配置项后，将会调用set方法处理配置项的参数
+    ngx_uint_t            conf;//在配置文件中的偏移量
+    ngx_uint_t            offset;//通常用于使用预设的解析方法解析配置项，这是配置模块的一个优秀设计，需要与conf配合使用
+    void                 *post;//配置项读取后的处理方法，必须是ngx_conf_post_t结构的指针
 };
 
 #define ngx_null_command  { ngx_null_string, 0, NULL, 0, 0, NULL }

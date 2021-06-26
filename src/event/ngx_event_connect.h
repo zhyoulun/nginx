@@ -21,8 +21,10 @@
 
 typedef struct ngx_peer_connection_s  ngx_peer_connection_t;
 
+//通过该方法由连接池中获取一个新连接
 typedef ngx_int_t (*ngx_event_get_peer_pt)(ngx_peer_connection_t *pc,
     void *data);
+//通过该方法将使用完毕的连接释放给连接池
 typedef void (*ngx_event_free_peer_pt)(ngx_peer_connection_t *pc, void *data,
     ngx_uint_t state);
 typedef void (*ngx_event_notify_peer_pt)(ngx_peer_connection_t *pc,
@@ -37,31 +39,31 @@ typedef void (*ngx_event_save_peer_session_pt)(ngx_peer_connection_t *pc,
 struct ngx_peer_connection_s {
     ngx_connection_t                *connection;
 
-    struct sockaddr                 *sockaddr;
+    struct sockaddr                 *sockaddr;//远端服务器socket信息
     socklen_t                        socklen;
     ngx_str_t                       *name;
 
-    ngx_uint_t                       tries;
+    ngx_uint_t                       tries;//连接失败后可以重试的次数
     ngx_msec_t                       start_time;
 
-    ngx_event_get_peer_pt            get;
+    ngx_event_get_peer_pt            get;//从连接池中获取长连接，必须使用该方法
     ngx_event_free_peer_pt           free;
     ngx_event_notify_peer_pt         notify;
-    void                            *data;
+    void                            *data;//该data成员作为上面方法的传递参数
 
 #if (NGX_SSL || NGX_COMPAT)
     ngx_event_set_peer_session_pt    set_session;
     ngx_event_save_peer_session_pt   save_session;
 #endif
 
-    ngx_addr_t                      *local;
+    ngx_addr_t                      *local;//本地地址信息
 
     int                              type;
-    int                              rcvbuf;
+    int                              rcvbuf;//接收缓冲区大小
 
     ngx_log_t                       *log;
 
-    unsigned                         cached:1;
+    unsigned                         cached:1;//标识该连接已经缓存
     unsigned                         transparent:1;
 
                                      /* ngx_connection_log_error_e */
