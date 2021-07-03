@@ -312,7 +312,7 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
                        cycle->conf_file.data);
     }
 
-    //遍历所有非核心模块
+    //遍历所有核心模块
     for (i = 0; cycle->modules[i]; i++) {
         if (cycle->modules[i]->type != NGX_CORE_MODULE) {
             continue;
@@ -847,7 +847,8 @@ old_shm_zone_done:
 
     return cycle;
 
-
+//------------------------------------------------------
+//如下为失败时的处理逻辑
 failed:
 
     if (!ngx_is_init_cycle(old_cycle)) {

@@ -86,3 +86,9 @@ failed:
 
     return NGX_ERROR;
 }
+
+void print_ngx_sys_errlist(ngx_log_t *log){
+    for (int i = 0; i < NGX_SYS_NERR; i++){
+        ngx_log_error(NGX_LOG_EMERG, log, 0, "ngx_sys_errlist[%d]=%s",i, ngx_sys_errlist[i].data);
+    }
+}

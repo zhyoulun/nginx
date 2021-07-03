@@ -8,8 +8,10 @@
             "type": "shell",
             "command": "${workspaceFolder}/objs/nginx",
             "args": [
-                "-c","${workspaceFolder}/conf/nginx.conf",
-                "-p","${workspaceFolder}/temp/",
+                "-c",
+                "${workspaceFolder}/conf/nginx.conf",
+                "-p",
+                "${workspaceFolder}/temp/"
             ],
             "problemMatcher": [],
             "group": {

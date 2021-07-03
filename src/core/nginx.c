@@ -225,7 +225,7 @@ main(int argc, char *const *argv)
     ngx_time_init();
 
 #if (NGX_PCRE)
-    ngx_regex_init();
+    ngx_regex_init();//todo 还没有详细看
 #endif
 
     ngx_pid = ngx_getpid();
@@ -235,6 +235,9 @@ main(int argc, char *const *argv)
     if (log == NULL) {
         return 1;
     }
+
+    //纯调试用
+    print_ngx_sys_errlist(log);
 
     /* STUB */
 #if (NGX_OPENSSL)
@@ -333,6 +336,7 @@ main(int argc, char *const *argv)
 
     ngx_cycle = cycle;
 
+    //获取ngx_core_module的配置
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
     if (ccf->master && ngx_process == NGX_PROCESS_SINGLE) {
@@ -377,6 +381,7 @@ main(int argc, char *const *argv)
     ngx_use_stderr = 0;
 
     if (ngx_process == NGX_PROCESS_SINGLE) {
+        //单进程模式，方便调试
         ngx_single_process_cycle(cycle);
 
     } else {
@@ -738,7 +743,7 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
     return pid;
 }
 
-
+//获取nginx的传参
 static ngx_int_t
 ngx_get_options(int argc, char *const *argv)
 {
@@ -904,6 +909,10 @@ ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv)
 #endif
 
     ngx_os_environ = environ;
+    //打印一些调试信息
+    for(int i=0;environ[i]!=NULL;i++){
+        ngx_log_error(NGX_LOG_EMERG, cycle->log, 0, "environ[%d]=%s", i, environ[i]);
+    }
 
     return NGX_OK;
 }
